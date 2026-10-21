@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JFT Quiz Dashboard</title>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS Utama -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        
+        <!-- HEADER -->
+        <header class="top-bar">
+            <div class="logo">
+                <i class="fa-solid fa-layer-group"></i> JFT Basic
+            </div>
+            <div class="user-profile">
+                <div class="profile-icon"><i class="fa-solid fa-user-astronaut"></i></div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <main class="main-content">
+            
+            <!-- HOME VIEW -->
+            <div id="home-view" class="view active">
+                <div class="card top-card yellow-card">
+                    <h2>Selamat Datang!</h2>
+                    <p>Persiapkan dirimu untuk ujian JFT Basic. Pilih kategori, jumlah soal, dan mulai berlatih.</p>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- Category Selection -->
+                    <div class="card">
+                        <h3 class="card-title">Pilih Kategori</h3>
+                        <div class="option-list">
+                            <!-- Hyogen -->
+                            <div class="option-item" onclick="selectCategory('hyogen', this)">
+                                <div class="radio-circle"></div>
+                                <div class="option-icon blue-icon"><i class="fa-solid fa-comments"></i></div>
+                                <div class="option-text">
+                                    <h4>Ekspresi (Hyogen)</h4>
+                                    <p>Latihan percakapan</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Bunpou -->
+                            <div class="option-item" onclick="selectCategory('bunpou', this)">
+                                <div class="radio-circle"></div>
+                                <div class="option-icon green-icon"><i class="fa-solid fa-book-open"></i></div>
+                                <div class="option-text">
+                                    <h4>Pola Kalimat (Bunpou)</h4>
+                                    <p>Latihan tata bahasa</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Kanji -->
+                            <div class="option-item" onclick="selectCategory('kanji', this)">
+                                <div class="radio-circle"></div>
+                                <div class="option-icon purple-icon"><i class="fa-solid fa-language"></i></div>
+                                <div class="option-text">
+                                    <h4>Kanji</h4>
+                                    <p>Latihan baca huruf Kanji</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Kotoba -->
+                            <div class="option-item" onclick="selectCategory('kotoba', this)">
+                                <div class="radio-circle"></div>
+                                <div class="option-icon pink-icon"><i class="fa-solid fa-spell-check"></i></div>
+                                <div class="option-text">
+                                    <h4>Kotoba (Kosakata)</h4>
+                                    <p>Latihan arti kosakata</p>
+                                </div>
+                            </div>
+
+                            <!-- Listening -->
+                            <div class="option-item" onclick="selectCategory('listening', this)">
+                                <div class="radio-circle"></div>
+                                <div class="option-icon yellow-icon"><i class="fa-solid fa-headphones"></i></div>
+                                <div class="option-text">
+                                    <h4>Listening (Choukai)</h4>
+                                    <p>Latihan mendengarkan audio</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Count Selection -->
+                    <div class="card">
+                        <h3 class="card-title">Jumlah Soal</h3>
+                        <div class="count-grid">
+                            <button class="count-btn" onclick="selectCount(10, this)">10</button>
+                            <button class="count-btn" onclick="selectCount(20, this)">20</button>
+                            <button class="count-btn" onclick="selectCount(30, this)">30</button>
+                            <button class="count-btn" onclick="selectCount(40, this)">40</button>
+                            <button class="count-btn" onclick="selectCount(50, this)">50</button>
+                        </div>
+                        
+                        <button id="btn-start" class="btn-primary full-width mt-20" onclick="startQuiz()" disabled>
+                            Mulai Kuis <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUIZ VIEW -->
+            <div id="quiz-view" class="view hidden">
+                <div class="card quiz-card">
+                    <div class="quiz-header">
+                        <button class="btn-icon" onclick="goHome()"><i class="fa-solid fa-xmark"></i></button>
+                        <div class="progress-text">Soal <span id="current-q">1</span> / <span id="total-q">10</span></div>
+                    </div>
+                    
+                    <div class="progress-bar-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+
+                    <!-- Wadah Soal -->
+                    <div id="question-container" class="question-container"></div>
+                    
+                    <!-- Wadah Pilihan -->
+                    <div id="options-container" class="options-container"></div>
+
+                    <div class="quiz-nav mt-20">
+                        <button id="btn-prev" class="btn-secondary" onclick="prevQuestion()" disabled><i class="fa-solid fa-chevron-left"></i> Kembali</button>
+                        <button id="btn-next" class="btn-primary" onclick="nextQuestion()">Lanjut <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULT VIEW -->
+            <div id="result-view" class="view hidden">
+                <div class="card result-card text-center">
+                    <div class="result-icon yellow-icon mx-auto"><i class="fa-solid fa-trophy"></i></div>
+                    <h2>Kuis Selesai!</h2>
+                    
+                    <div class="score-box">
+                        <span id="score-text">0</span>
+                        <span class="score-divider">/</span>
+                        <span id="total-score-text">0</span>
+                    </div>
+
+                    <p id="result-message" class="result-msg">Kerja bagus!</p>
+
+                    <!-- REVIEW SECTION -->
+                    <div class="review-section mt-20 text-left">
+                        <h3 class="card-title">Introspeksi Jawaban</h3>
+                        <div class="review-tabs">
+                            <button class="review-tab active" onclick="filterReview('all', this)">Semua</button>
+                            <button class="review-tab" onclick="filterReview('wrong', this)">Salah</button>
+                            <button class="review-tab" onclick="filterReview('correct', this)">Benar</button>
+                        </div>
+                        
+                        <div id="review-container" class="review-container"></div>
+                    </div>
+
+                    <button class="btn-primary full-width mt-20" onclick="goHome()">
+                        <i class="fa-solid fa-house"></i> Kembali ke Menu Utama
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Load Data Soal -->
+    <script src="soal/hyogen/hyogen.js"></script>
+    <script src="soal/bunpou/bunpou.js"></script>
+    <script src="soal/kanji/kanji.js"></script>
+    <script src="soal/kotoba/kotoba.js"></script>
+    <script src="soal/listening/listening.js"></script>
+    
+    <!-- Load Script Utama -->
+    <script src="script.js"></script>
+</body>
+</html>
